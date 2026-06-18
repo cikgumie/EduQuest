@@ -673,6 +673,7 @@ function renderUI() {
     renderHUD();
     renderSidebar();
     renderStoryLog();
+    renderInteractionPanel();
 }
 
 // Global start
