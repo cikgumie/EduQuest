@@ -43,9 +43,13 @@ const GameState = {
         this.updateFromPlayerState(data.playerState);
         
         if (data.story) {
+            const storyText = typeof data.story === 'object' 
+                ? (data.story.narrative || data.story.text || "") 
+                : String(data.story);
+            
             this.storyHistory = [{
                 type: "story",
-                text: data.story.text || data.story,
+                text: storyText,
                 npc: data.story.npc || null
             }];
             this.currentChoices = data.story.choices || data.choices || [];
@@ -92,9 +96,13 @@ const GameState = {
      * Add a story segment to history
      */
     addStorySegment(text, choices = [], npc = null) {
+        const storyText = typeof text === 'object' && text !== null
+            ? (text.narrative || text.text || "")
+            : String(text || "");
+
         this.storyHistory.push({
             type: "story",
-            text: text,
+            text: storyText,
             npc: npc
         });
         this.currentChoices = choices;
@@ -109,7 +117,7 @@ const GameState = {
         if (question) {
             this.storyHistory.push({
                 type: "question",
-                text: question.question,
+                text: String(question.question || ""),
                 id: question.questionId,
                 options: question.options,
                 qType: question.type
@@ -124,7 +132,7 @@ const GameState = {
     addFeedbackSegment(feedback, correct, xpGained, hpChange) {
         this.storyHistory.push({
             type: "feedback",
-            text: feedback,
+            text: String(feedback || ""),
             correct: correct,
             xpGained: xpGained,
             hpChange: hpChange
