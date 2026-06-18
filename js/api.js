@@ -5,7 +5,7 @@
  * Bypasses CORS preflight issues by sending POST bodies as plain text.
  */
 
-const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwjV4jz6cRo6Lw8SQLGFueaYHg2GR7dX7Kq6hptCM1GXCpwkFjtjzT6O70pMQy20AAPjw/exec";
+const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz-noZmGr2IEXBeOzn6ffGTkeFKn570sA-fVS35DNj27g18uq6t2T9aBk1Ibz3YIn4hPQ/exec";
 
 const ApiClient = {
     /**
