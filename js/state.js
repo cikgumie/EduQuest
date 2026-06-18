@@ -185,6 +185,21 @@ const GameState = {
             
             const savedState = JSON.parse(stateJson);
             Object.assign(this, savedState);
+            
+            // Sanitize storyHistory to prevent object-typed text crashes on load
+            if (Array.isArray(this.storyHistory)) {
+                this.storyHistory = this.storyHistory.map(segment => {
+                    if (segment && typeof segment === 'object') {
+                        let text = segment.text;
+                        if (typeof text === 'object' && text !== null) {
+                            text = text.narrative || text.text || JSON.stringify(text);
+                        }
+                        segment.text = String(text || "");
+                    }
+                    return segment;
+                });
+            }
+            
             return true;
         } catch (e) {
             console.error("Failed to load state from localStorage:", e);

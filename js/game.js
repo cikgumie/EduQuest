@@ -61,6 +61,12 @@ function runTypewriter(element, text, onComplete) {
     // If a typewriter is already running, cancel it
     stopTypewriter();
 
+    // Ensure text is a string
+    if (typeof text === 'object' && text !== null) {
+        text = text.narrative || text.text || JSON.stringify(text);
+    }
+    text = String(text || "");
+
     typewriterElement = element;
     currentTypewriterText = text;
     isTypewriterRunning = true;
@@ -252,6 +258,15 @@ function renderStoryLog() {
     const history = GameState.storyHistory || [];
     
     history.forEach((segment, index) => {
+        if (!segment) return;
+        
+        // Ensure segment.text is a string
+        let segmentText = segment.text;
+        if (typeof segmentText === 'object' && segmentText !== null) {
+            segmentText = segmentText.narrative || segmentText.text || JSON.stringify(segmentText);
+        }
+        segmentText = String(segmentText || "");
+
         const isLast = (index === history.length - 1);
         const segmentDiv = document.createElement("div");
         
@@ -269,11 +284,11 @@ function renderStoryLog() {
             const bodyEl = segmentDiv.querySelector(".segment-body");
             if (isLast && isTypewriterRunning) {
                 // If typewriter needs to run
-                runTypewriter(bodyEl, segment.text, () => {
+                runTypewriter(bodyEl, segmentText, () => {
                     renderInteractionPanel();
                 });
             } else {
-                bodyEl.innerHTML = segment.text.replace(/\n/g, '<br>');
+                bodyEl.innerHTML = segmentText.replace(/\n/g, '<br>');
             }
         } 
         
@@ -284,7 +299,7 @@ function renderStoryLog() {
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                     Cabaran Pembelajaran (${segment.qType ? segment.qType.toUpperCase() : 'Recall'})
                 </div>
-                <div class="segment-body">${segment.text.replace(/\n/g, '<br>')}</div>
+                <div class="segment-body">${segmentText.replace(/\n/g, '<br>')}</div>
             `;
             log.appendChild(segmentDiv);
         }
@@ -302,7 +317,7 @@ function renderStoryLog() {
                     </svg>
                     EVALUASI AI - ${isCorrect ? 'TAHNIAH, JAWAPAN BETUL!' : 'JAWAPAN SILAP'}
                 </div>
-                <div class="segment-body" style="font-weight: 500;">${segment.text.replace(/\n/g, '<br>')}</div>
+                <div class="segment-body" style="font-weight: 500;">${segmentText.replace(/\n/g, '<br>')}</div>
                 <div style="font-family: var(--font-mono); font-size: 11px; margin-top: 8px; color: var(--color-text-muted);">
                     XP Gained: <span style="color: var(--color-success)">+${segment.xpGained} XP</span> 
                     ${segment.hpChange !== 0 ? `| HP Change: <span style="color: var(--color-danger)">${segment.hpChange} HP</span>` : ''}
