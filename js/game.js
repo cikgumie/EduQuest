@@ -33,7 +33,10 @@ function checkSession() {
  * Sync game state with the backend spreadsheet on page load
  */
 async function syncGameState() {
-    const board = document.querySelector('.game-layout');
+    // Show loading while syncing
+    if (typeof LoadingScreen !== 'undefined') {
+        LoadingScreen.show('Menyambung ke Dunia...', 'Memuatkan progress dari pelayan');
+    }
 
     // Render initial cached UI to avoid flash of empty states
     renderUI();
@@ -49,13 +52,21 @@ async function syncGameState() {
         }
 
         renderUI();
+
+        if (typeof LoadingScreen !== 'undefined') {
+            LoadingScreen.hide();
+        }
     } catch (err) {
         console.warn("Failed to sync with GAS backend. Operating on local cache.", err);
+        if (typeof LoadingScreen !== 'undefined') {
+            LoadingScreen.hide();
+        }
     }
 }
 
 /**
  * Typewriter effect for text display
+ * Enhanced with blinking cursor and skip hint indicator.
  */
 function runTypewriter(element, text, onComplete) {
     // If a typewriter is already running, cancel it
@@ -72,37 +83,90 @@ function runTypewriter(element, text, onComplete) {
     isTypewriterRunning = true;
     element.innerHTML = "";
 
+    // Append blinking cursor
+    const cursor = document.createElement('span');
+    cursor.className = 'typewriter-cursor';
+    element.appendChild(cursor);
+
+    // Create skip hint element
+    const segment = element.closest('.log-segment');
+    let skipHint = null;
+    if (segment) {
+        skipHint = document.createElement('div');
+        skipHint.className = 'typewriter-skip-hint';
+        skipHint.innerHTML = `
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+                <polyline points="15 18 21 12 15 6"></polyline>
+            </svg>
+            Ketik untuk skip
+        `;
+        segment.appendChild(skipHint);
+
+        // Show skip hint after 1.5s delay
+        setTimeout(() => {
+            if (isTypewriterRunning && skipHint) {
+                skipHint.classList.add('visible');
+            }
+        }, 1500);
+    }
+
     let index = 0;
 
-    // Create skip handler
+    // Create skip handler — click anywhere in the segment to complete
     const skipHandler = () => {
-        stopTypewriter();
-        element.innerHTML = text.replace(/\n/g, '<br>');
-        onComplete();
+        finishTypewriter(text, onComplete, skipHint, cursor);
     };
 
-    // Attach skip listener to the log segment or body
-    element.closest('.log-segment').addEventListener('click', skipHandler, { once: true });
+    // Attach skip listener to the log segment
+    if (segment) {
+        segment.addEventListener('click', skipHandler, { once: true });
+    }
 
     typewriterTimer = setInterval(() => {
         if (index < text.length) {
             const char = text.charAt(index);
             if (char === '\n') {
-                element.innerHTML += '<br>';
+                // Insert <br> before the cursor
+                cursor.insertAdjacentHTML('beforebegin', '<br>');
             } else {
-                element.innerHTML += char;
+                cursor.insertAdjacentHTML('beforebegin', char);
             }
             index++;
 
             // Auto-scroll log container to bottom
             const logContainer = document.getElementById("story-log");
-            logContainer.scrollTop = logContainer.scrollHeight;
+            if (logContainer) {
+                logContainer.scrollTop = logContainer.scrollHeight;
+            }
         } else {
-            stopTypewriter();
-            element.closest('.log-segment').removeEventListener('click', skipHandler);
-            onComplete();
+            finishTypewriter(text, onComplete, skipHint, cursor);
+            if (segment) {
+                segment.removeEventListener('click', skipHandler);
+            }
         }
     }, TYPEWRITER_SPEED);
+}
+
+/**
+ * Complete the typewriter instantly and clean up cursor/hint
+ */
+function finishTypewriter(text, onComplete, skipHint, cursor) {
+    stopTypewriter();
+    if (typewriterElement) {
+        // Remove cursor
+        if (cursor && cursor.parentNode) {
+            cursor.remove();
+        }
+        // Fill remaining text
+        typewriterElement.innerHTML = text.replace(/\n/g, '<br>');
+    }
+    // Remove skip hint
+    if (skipHint && skipHint.parentNode) {
+        skipHint.classList.remove('visible');
+        skipHint.remove();
+    }
+    if (onComplete) onComplete();
 }
 
 function stopTypewriter() {
@@ -475,6 +539,10 @@ async function handleChoiceSelect(choiceId, buttonElement) {
         buttonElement.style.opacity = 0.7;
     }
 
+    if (typeof LoadingScreen !== 'undefined') {
+        LoadingScreen.show('Dunia Bergerak...', 'NPC sedang memproses pilihan anda');
+    }
+
     try {
         const response = await ApiClient.processChoice(GameState.sessionId, choiceId);
 
@@ -500,8 +568,14 @@ async function handleChoiceSelect(choiceId, buttonElement) {
             triggerLevelUpModal(response.levelUp);
         }
 
+        if (typeof LoadingScreen !== 'undefined') {
+            LoadingScreen.hide();
+        }
         renderUI();
     } catch (err) {
+        if (typeof LoadingScreen !== 'undefined') {
+            LoadingScreen.hide();
+        }
         alert(`Gagal memproses pilihan: ${err.message}`);
         if (buttonElement) {
             buttonElement.disabled = false;
@@ -522,6 +596,10 @@ async function handleAnswerSubmit(answerText, buttonElement) {
     // Show loading spinner / state
     const originalText = buttonElement.innerHTML;
     buttonElement.innerHTML = "Menilai jawapan...";
+
+    if (typeof LoadingScreen !== 'undefined') {
+        LoadingScreen.show('Menilai Jawapan...', 'Professor Byte sedang menyemak jawapan anda');
+    }
 
     try {
         const q = GameState.activeQuestion;
@@ -565,8 +643,14 @@ async function handleAnswerSubmit(answerText, buttonElement) {
             triggerDeathModal();
         }
 
+        if (typeof LoadingScreen !== 'undefined') {
+            LoadingScreen.hide();
+        }
         renderUI();
     } catch (err) {
+        if (typeof LoadingScreen !== 'undefined') {
+            LoadingScreen.hide();
+        }
         alert(`Ralat memproses jawapan: ${err.message}`);
         buttonElement.disabled = false;
         buttonElement.innerHTML = originalText;
@@ -581,6 +665,10 @@ async function handleUseItem(itemId) {
     if (GameState.hp <= 0) {
         alert("Anda telah tewas! Sila revive terlebih dahulu.");
         return;
+    }
+
+    if (typeof LoadingScreen !== 'undefined') {
+        LoadingScreen.show('Menggunakan Item...', 'Mengaplikasikan kesan barangan');
     }
 
     try {
@@ -601,8 +689,14 @@ async function handleUseItem(itemId) {
             });
         }
 
+        if (typeof LoadingScreen !== 'undefined') {
+            LoadingScreen.hide();
+        }
         renderUI();
     } catch (err) {
+        if (typeof LoadingScreen !== 'undefined') {
+            LoadingScreen.hide();
+        }
         alert(`Gagal menggunakan barangan: ${err.message}`);
     }
 }
@@ -611,10 +705,20 @@ async function handleUseItem(itemId) {
  * Save game manual trigger
  */
 async function handleSaveGame() {
+    if (typeof LoadingScreen !== 'undefined') {
+        LoadingScreen.show('Menyimpan Progress...', 'Menyegerakkan data ke pelayan');
+    }
+
     try {
         const response = await ApiClient.saveGame(GameState.sessionId);
+        if (typeof LoadingScreen !== 'undefined') {
+            LoadingScreen.hide();
+        }
         alert(`💾 Sesi berjaya disimpan ke Google Sheets pada ${new Date(response.timestamp).toLocaleTimeString()}`);
     } catch (err) {
+        if (typeof LoadingScreen !== 'undefined') {
+            LoadingScreen.hide();
+        }
         alert(`Gagal menyimpan sesi: ${err.message}`);
     }
 }
@@ -623,6 +727,10 @@ async function handleSaveGame() {
  * Handle reviving a dead player
  */
 async function handleRevive() {
+    if (typeof LoadingScreen !== 'undefined') {
+        LoadingScreen.show('Menghidupkan Semula...', 'Professor Byte sedang membangkitkan wira');
+    }
+
     try {
         const response = await ApiClient.revive(GameState.sessionId);
 
@@ -639,8 +747,14 @@ async function handleRevive() {
             npc: "Sistem Bantuan"
         });
 
+        if (typeof LoadingScreen !== 'undefined') {
+            LoadingScreen.hide();
+        }
         renderUI();
     } catch (err) {
+        if (typeof LoadingScreen !== 'undefined') {
+            LoadingScreen.hide();
+        }
         alert(`Ralat kebangkitan: ${err.message}`);
     }
 }

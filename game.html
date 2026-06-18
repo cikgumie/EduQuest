@@ -10,6 +10,18 @@
 </head>
 
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-core"></div>
+        </div>
+        <div class="loading-text" id="loading-text">Memuatkan Dunia...</div>
+        <div class="loading-subtitle" id="loading-subtitle"></div>
+    </div>
+
     <div class="game-layout">
         <!-- ============================================================
              HUD HEADER
@@ -310,11 +322,36 @@
     <script src="js/state.js"></script>
     <script src="js/game.js"></script>
 
-    <!-- Inline: Theme toggle & Sidebar logic -->
+    <!-- Inline: Loading, Theme toggle & Sidebar logic -->
     <script>
-        // ============================================================
-        // THEME
-        // ============================================================
+        // Loading Manager
+        const LoadingScreen = {
+            _overlay: null,
+            _text: null,
+            _sub: null,
+
+            _init() {
+                this._overlay = document.getElementById('loading-overlay');
+                this._text = document.getElementById('loading-text');
+                this._sub = document.getElementById('loading-subtitle');
+            },
+
+            show(mainText, subText) {
+                if (!this._overlay) this._init();
+                if (this._text) this._text.textContent = mainText || 'Memuatkan...';
+                if (this._sub) this._sub.textContent = subText || '';
+                if (this._overlay) this._overlay.classList.add('active');
+            },
+
+            hide() {
+                if (!this._overlay) this._init();
+                if (this._overlay) this._overlay.classList.remove('active');
+            }
+        };
+
+        LoadingScreen._init();
+
+        // Theme
         (function () {
             const saved = localStorage.getItem('ai_rpg_theme');
             if (saved === 'light') {

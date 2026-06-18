@@ -1741,6 +1741,175 @@ svg {
 }
 
 /* ============================================================
+ * LOADING SCREEN OVERLAY
+ * ============================================================ */
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--color-bg);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-lg);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.loading-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* RPG-themed spinner */
+.loading-spinner {
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.loading-spinner .spinner-ring {
+    position: absolute;
+    inset: 0;
+    border: 3px solid transparent;
+    border-radius: 50%;
+    animation: spinnerRotate 1.5s linear infinite;
+}
+
+.loading-spinner .spinner-ring:nth-child(1) {
+    border-top-color: var(--color-primary);
+    animation-delay: 0s;
+}
+
+.loading-spinner .spinner-ring:nth-child(2) {
+    inset: 8px;
+    border-right-color: var(--color-secondary);
+    animation-delay: 0.2s;
+    animation-direction: reverse;
+}
+
+.loading-spinner .spinner-ring:nth-child(3) {
+    inset: 16px;
+    border-bottom-color: var(--color-cta);
+    animation-delay: 0.4s;
+}
+
+.loading-spinner .spinner-core {
+    position: absolute;
+    inset: 24px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    animation: spinnerPulse 1s ease-in-out infinite;
+    box-shadow: 0 0 20px var(--color-primary-glow);
+}
+
+.loading-text {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    text-align: center;
+    animation: pulse 1.5s ease-in-out infinite;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.loading-subtitle {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    opacity: 0.6;
+    text-align: center;
+    max-width: 280px;
+    line-height: 1.5;
+}
+
+@keyframes spinnerRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spinnerPulse {
+
+    0%,
+    100% {
+        transform: scale(0.8);
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
+
+/* ============================================================
+ * TYPEWRITER CURSOR & SKIP INDICATOR
+ * ============================================================ */
+.typewriter-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background: var(--color-cta);
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: cursorBlink 0.7s step-end infinite;
+    box-shadow: 0 0 6px var(--color-cta-glow);
+}
+
+@keyframes cursorBlink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+.typewriter-skip-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--color-text-muted);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    padding: 8px 0 0;
+    pointer-events: none;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.typewriter-skip-hint.visible {
+    opacity: 0.7;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.typewriter-skip-hint svg {
+    animation: float 1.5s ease-in-out infinite;
+}
+
+/* Typewriter complete state */
+.typewriter-done .typewriter-cursor {
+    display: none;
+}
+
+.typewriter-done .typewriter-skip-hint {
+    opacity: 0;
+}
+
+/* ============================================================
  * REDUCED MOTION
  * ============================================================ */
 @media (prefers-reduced-motion: reduce) {
