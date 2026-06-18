@@ -34,20 +34,20 @@ function checkSession() {
  */
 async function syncGameState() {
     const board = document.querySelector('.game-layout');
-    
+
     // Render initial cached UI to avoid flash of empty states
     renderUI();
 
     try {
         const data = await ApiClient.getPlayerState(GameState.sessionId);
-        
+
         // Update state
         GameState.updateFromPlayerState(data.playerState);
-        
+
         if (data.activeQuest) {
             GameState.activeQuest = data.activeQuest;
         }
-        
+
         renderUI();
     } catch (err) {
         console.warn("Failed to sync with GAS backend. Operating on local cache.", err);
@@ -71,19 +71,19 @@ function runTypewriter(element, text, onComplete) {
     currentTypewriterText = text;
     isTypewriterRunning = true;
     element.innerHTML = "";
-    
+
     let index = 0;
-    
+
     // Create skip handler
     const skipHandler = () => {
         stopTypewriter();
         element.innerHTML = text.replace(/\n/g, '<br>');
         onComplete();
     };
-    
+
     // Attach skip listener to the log segment or body
     element.closest('.log-segment').addEventListener('click', skipHandler, { once: true });
-    
+
     typewriterTimer = setInterval(() => {
         if (index < text.length) {
             const char = text.charAt(index);
@@ -93,7 +93,7 @@ function runTypewriter(element, text, onComplete) {
                 element.innerHTML += char;
             }
             index++;
-            
+
             // Auto-scroll log container to bottom
             const logContainer = document.getElementById("story-log");
             logContainer.scrollTop = logContainer.scrollHeight;
@@ -118,7 +118,7 @@ function stopTypewriter() {
  */
 function renderHUD() {
     document.getElementById("hud-player-name").textContent = GameState.playerName;
-    
+
     // Level Badge description
     let levelTitle = "Novice Explorer";
     if (GameState.level >= 50) levelTitle = "Legend";
@@ -126,24 +126,34 @@ function renderHUD() {
     else if (GameState.level >= 10) levelTitle = "Scholar";
     else if (GameState.level >= 5) levelTitle = "Knowledge Seeker";
     document.getElementById("hud-player-level").textContent = `${levelTitle} (Lv. ${GameState.level})`;
-    
-    // Location name
-    document.getElementById("hud-location-name").textContent = 
-        GameState.currentLocation ? GameState.currentLocation.replace(/_/g, ' ').toUpperCase() : "DUNIA RPG";
+
+    // Location name (both desktop HUD and mobile badge)
+    const locationName = GameState.currentLocation
+        ? GameState.currentLocation.replace(/_/g, ' ').toUpperCase()
+        : "DUNIA RPG";
+
+    const hudLoc = document.getElementById("hud-location-name");
+    if (hudLoc) hudLoc.textContent = locationName;
+
+    const mobileLoc = document.getElementById("mobile-location-name");
+    if (mobileLoc) mobileLoc.textContent = locationName;
 
     // Health Bar
     const hpPct = Math.max(0, Math.min(100, (GameState.hp / GameState.maxHp) * 100));
     document.getElementById("hud-hp-text").textContent = `${GameState.hp}/${GameState.maxHp}`;
     const hpFill = document.getElementById("hud-hp-fill");
     hpFill.style.width = `${hpPct}%`;
+
+    // Critical HP warning
     if (hpPct < 30) {
         hpFill.style.background = 'var(--color-danger)';
+        hpFill.classList.add('critical');
     } else {
         hpFill.style.background = 'linear-gradient(90deg, #EF4444, #F43F5E)';
+        hpFill.classList.remove('critical');
     }
 
     // Experience Bar
-    // Formula for XP curve: xp needed for current level vs xp gathered
     const calc = calculateLevelProgress(GameState.xp);
     const xpPct = Math.max(0, Math.min(100, (calc.currentXpInLevel / calc.xpNeededForLevel) * 100));
     document.getElementById("hud-xp-text").textContent = `${Math.floor(calc.currentXpInLevel)}/${calc.xpNeededForLevel} XP`;
@@ -156,7 +166,7 @@ function renderHUD() {
 function calculateLevelProgress(xp) {
     let level = 1;
     let accumulatedXp = 0;
-    
+
     while (true) {
         let neededForNext = 100 * level * (level + 1) / 2;
         if (xp >= neededForNext) {
@@ -179,7 +189,7 @@ function renderSidebar() {
     // Active Quest Title
     const questTitle = document.getElementById("sidebar-quest-title");
     const questDesc = document.getElementById("sidebar-quest-desc");
-    
+
     if (GameState.activeQuest) {
         questTitle.textContent = GameState.activeQuest.title || "Misi Utama";
         questDesc.textContent = GameState.activeQuest.description || "Terokai lokasi semasa anda.";
@@ -191,10 +201,10 @@ function renderSidebar() {
     // Inventory Slots
     const grid = document.getElementById("inventory-grid");
     grid.innerHTML = "";
-    
+
     const slotsCount = 4; // Render 4 slots
     const inventory = GameState.inventory || [];
-    
+
     // Count items by ID
     const itemCountMap = {};
     inventory.forEach(item => {
@@ -206,12 +216,12 @@ function renderSidebar() {
 
     for (let i = 0; i < slotsCount; i++) {
         const slotDiv = document.createElement("div");
-        
+
         if (i < uniqueItemIds.length) {
             const itemId = uniqueItemIds[i];
             const qty = itemCountMap[itemId];
             const name = itemId.replace(/_/g, ' ').toUpperCase();
-            
+
             let description = "Barangan sokongan pembelajaran.";
             if (itemId === "potion_clarity") {
                 description = "Potion of Clarity: Memberikan analogi mudah (klu) atau membuang separuh pilihan salah.";
@@ -229,14 +239,14 @@ function renderSidebar() {
                     <div style="margin-top: 8px; color: var(--color-cta); font-weight: bold; font-size: 10px;">KLIK UNTUK GUNA</div>
                 </div>
             `;
-            
+
             // Click to use
             slotDiv.addEventListener("click", () => handleUseItem(itemId));
         } else {
             slotDiv.className = "inventory-slot empty";
             slotDiv.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>`;
         }
-        
+
         grid.appendChild(slotDiv);
     }
 
@@ -254,12 +264,12 @@ function renderSidebar() {
 function renderStoryLog() {
     const log = document.getElementById("story-log");
     log.innerHTML = "";
-    
+
     const history = GameState.storyHistory || [];
-    
+
     history.forEach((segment, index) => {
         if (!segment) return;
-        
+
         // Ensure segment.text is a string
         let segmentText = segment.text;
         if (typeof segmentText === 'object' && segmentText !== null) {
@@ -269,7 +279,7 @@ function renderStoryLog() {
 
         const isLast = (index === history.length - 1);
         const segmentDiv = document.createElement("div");
-        
+
         if (segment.type === "story") {
             segmentDiv.className = "log-segment story";
             segmentDiv.innerHTML = `
@@ -280,7 +290,7 @@ function renderStoryLog() {
                 <div class="segment-body"></div>
             `;
             log.appendChild(segmentDiv);
-            
+
             const bodyEl = segmentDiv.querySelector(".segment-body");
             if (isLast && isTypewriterRunning) {
                 // If typewriter needs to run
@@ -290,8 +300,8 @@ function renderStoryLog() {
             } else {
                 bodyEl.innerHTML = segmentText.replace(/\n/g, '<br>');
             }
-        } 
-        
+        }
+
         else if (segment.type === "question") {
             segmentDiv.className = "log-segment question";
             segmentDiv.innerHTML = `
@@ -303,17 +313,17 @@ function renderStoryLog() {
             `;
             log.appendChild(segmentDiv);
         }
-        
+
         else if (segment.type === "feedback") {
             const isCorrect = segment.correct;
             segmentDiv.className = `log-segment feedback ${isCorrect ? '' : 'incorrect'}`;
             segmentDiv.innerHTML = `
                 <div class="segment-header" style="color: ${isCorrect ? 'var(--color-success)' : 'var(--color-danger)'};">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        ${isCorrect 
-                            ? '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>' 
-                            : '<circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line>'
-                        }
+                        ${isCorrect
+                    ? '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>'
+                    : '<circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line>'
+                }
                     </svg>
                     EVALUASI AI - ${isCorrect ? 'TAHNIAH, JAWAPAN BETUL!' : 'JAWAPAN SILAP'}
                 </div>
@@ -365,7 +375,7 @@ function renderInteractionPanel() {
     // Scenario 1: Active Question (Requires Answer Submit)
     if (GameState.activeQuestion) {
         const q = GameState.activeQuestion;
-        
+
         // Parse options (could be JSON string, array, or object)
         let optionsList = null;
         if (q.options) {
@@ -384,7 +394,7 @@ function renderInteractionPanel() {
             const list = Array.isArray(optionsList) ? optionsList : Object.values(optionsList);
             const containerDiv = document.createElement("div");
             containerDiv.className = "choices-container multi-col";
-            
+
             list.forEach((opt, idx) => {
                 const optBtn = document.createElement("button");
                 optBtn.className = "choice-btn";
@@ -396,7 +406,7 @@ function renderInteractionPanel() {
                 containerDiv.appendChild(optBtn);
             });
             questionContainer.appendChild(containerDiv);
-        } 
+        }
         // Scenario 1b: Open-Ended / Fill-in-the-blank Textarea
         else {
             questionContainer.innerHTML = `
@@ -407,7 +417,7 @@ function renderInteractionPanel() {
                     Hantar Jawapan
                 </button>
             `;
-            
+
             const submitBtn = questionContainer.querySelector("#btn-submit-answer");
             submitBtn.addEventListener("click", () => {
                 const val = document.getElementById("open-ended-answer").value.trim();
@@ -419,13 +429,13 @@ function renderInteractionPanel() {
             });
         }
         targetPanel.appendChild(questionContainer);
-    } 
-    
+    }
+
     // Scenario 2: Normal Choice Dialog
     else if (GameState.currentChoices && GameState.currentChoices.length > 0) {
         const containerDiv = document.createElement("div");
         containerDiv.className = "choices-container";
-        
+
         GameState.currentChoices.forEach((ch, idx) => {
             const chBtn = document.createElement("button");
             chBtn.className = "choice-btn";
@@ -433,15 +443,15 @@ function renderInteractionPanel() {
                 <span class="choice-num">${idx + 1}</span>
                 <span style="flex: 1;">${ch.text || ch}</span>
             `;
-            
+
             const choiceId = ch.id || ch.choiceId || idx;
             chBtn.addEventListener("click", () => handleChoiceSelect(choiceId, chBtn));
             containerDiv.appendChild(chBtn);
         });
-        
+
         targetPanel.appendChild(containerDiv);
-    } 
-    
+    }
+
     // Scenario 3: Story Continue (Static transition)
     else {
         targetPanel.innerHTML = `
@@ -449,7 +459,7 @@ function renderInteractionPanel() {
                 Teruskan Kembara
             </button>
         `;
-        
+
         document.getElementById("btn-continue-adventure").addEventListener("click", () => {
             handleChoiceSelect("continue", document.getElementById("btn-continue-adventure"));
         });
@@ -467,10 +477,10 @@ async function handleChoiceSelect(choiceId, buttonElement) {
 
     try {
         const response = await ApiClient.processChoice(GameState.sessionId, choiceId);
-        
+
         // Update state
         GameState.updateFromPlayerState(response.playerState);
-        
+
         // Add new segment
         if (response.story) {
             GameState.addStorySegment(
@@ -479,7 +489,7 @@ async function handleChoiceSelect(choiceId, buttonElement) {
                 response.story.npc || null
             );
         }
-        
+
         // Setup next question if it exists
         if (response.question) {
             GameState.setQuestion(response.question);
@@ -515,11 +525,11 @@ async function handleAnswerSubmit(answerText, buttonElement) {
 
     try {
         const q = GameState.activeQuestion;
-        
+
         // Submit
         const response = await ApiClient.submitAnswer(
-            GameState.sessionId, 
-            q.questionId, 
+            GameState.sessionId,
+            q.questionId,
             answerText,
             {
                 questionText: q.question,
@@ -575,13 +585,13 @@ async function handleUseItem(itemId) {
 
     try {
         const response = await ApiClient.useItem(GameState.sessionId, itemId);
-        
+
         // Show success
         alert(`✅ Barangan Berjaya Digunakan!\n\nKesan: ${response.effect.message || "HP Dipulihkan!"}`);
-        
+
         // Update stats
         GameState.updateFromPlayerState(response.playerState);
-        
+
         // Add healing effect locally or log segment
         if (response.effect.type === "heal") {
             GameState.storyHistory.push({
@@ -590,7 +600,7 @@ async function handleUseItem(itemId) {
                 npc: "Sistem Bantuan"
             });
         }
-        
+
         renderUI();
     } catch (err) {
         alert(`Gagal menggunakan barangan: ${err.message}`);
@@ -615,13 +625,13 @@ async function handleSaveGame() {
 async function handleRevive() {
     try {
         const response = await ApiClient.revive(GameState.sessionId);
-        
+
         // Close modal
         document.getElementById("death-modal").classList.remove("active");
-        
+
         // Update local HP
         GameState.updateFromPlayerState(response.playerState);
-        
+
         // Add revive log
         GameState.storyHistory.push({
             type: "story",

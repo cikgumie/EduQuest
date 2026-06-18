@@ -1,57 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RPG Education AI - Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0F0F23">
+    <title>RPG Education AI — Portal</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
     <div class="landing-container">
-        <!-- Main Logo / Title -->
+        <!-- Theme Toggle Toolbar -->
+        <div class="landing-toolbar">
+            <button class="btn-theme" id="btn-theme-toggle" aria-label="Toggle light/dark mode" title="Tukar tema">
+                🌙
+            </button>
+        </div>
+
+        <!-- Hero Section -->
         <h1 class="game-title">RPG Education AI</h1>
         <div class="game-subtitle">Transforming Notes into Adventures</div>
 
-        <!-- Resume Game Alert banner if session exists -->
-        <div id="resume-banner" class="glass-panel"
-            style="display: none; width: 100%; max-width: 500px; padding: 20px; margin-bottom: 20px; border-color: var(--color-success); background: rgba(16, 185, 129, 0.05); text-align: center;">
-            <p
-                style="color: #FFF; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <!-- Resume Game Alert Banner -->
+        <div id="resume-banner" class="resume-banner glass-panel" style="display: none;">
+            <p class="resume-title">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-success);">
+                    stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-success); flex-shrink: 0;">
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
                 Ada Sesi Permainan Aktif!
             </p>
-            <p style="font-size: 13px; color: var(--color-text-muted); margin-bottom: 16px;" id="resume-details">
+            <p class="resume-details" id="resume-details">
                 Pemain: <strong>-</strong> | Level: <strong>-</strong>
             </p>
-            <div style="display: flex; gap: 10px; justify-content: center;">
+            <div class="resume-actions">
                 <button class="btn btn-primary" id="btn-resume"
-                    style="box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); background: var(--color-success);">Teruskan
-                    Sesi</button>
-                <button class="btn btn-secondary" id="btn-discard" style="padding: 10px 15px; font-size: 12px;">Sesi
-                    Baru</button>
+                    style="background: var(--color-success); box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);">
+                    Teruskan Sesi
+                </button>
+                <button class="btn btn-secondary" id="btn-discard" style="font-size: 0.75rem; padding: 10px 16px;">
+                    Sesi Baru
+                </button>
             </div>
         </div>
 
         <!-- Portal Tabs Card -->
         <div class="menu-card glass-panel">
             <div class="menu-tabs">
-                <div class="tab-item active" id="tab-student" onclick="switchTab('student')">Masuk Game</div>
-                <div class="tab-item" id="tab-teacher" onclick="switchTab('teacher')">Panel Guru</div>
+                <button class="tab-item active" id="tab-student" onclick="switchTab('student')" aria-selected="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    Masuk Game
+                </button>
+                <button class="tab-item" id="tab-teacher" onclick="switchTab('teacher')" aria-selected="false">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                    Panel Guru
+                </button>
             </div>
 
             <!-- Student View -->
-            <div id="student-form-container">
+            <div id="student-form-container" class="stagger-children">
                 <form id="student-form" onsubmit="handleStartGame(event)">
                     <div class="form-group">
                         <label class="form-label" for="player-name">Nama Wira Anda</label>
                         <input type="text" id="player-name" class="form-input" placeholder="Masukkan nama wira anda..."
-                            required>
+                            autocomplete="off" required>
                     </div>
 
                     <div class="form-group">
@@ -64,16 +84,16 @@
                     <div class="form-group">
                         <label class="form-label" for="game-difficulty">Tahap Kesukaran Mula</label>
                         <select id="game-difficulty" class="form-select">
-                            <option value="easy">Easy (Sesuai untuk ulangkaji)</option>
-                            <option value="medium" selected>Medium (Standard)</option>
-                            <option value="hard">Hard (Cabaran Maksimum)</option>
+                            <option value="easy">🟢 Easy — Sesuai untuk ulangkaji</option>
+                            <option value="medium" selected>🟡 Medium — Standard</option>
+                            <option value="hard">🔴 Hard — Cabaran Maksimum</option>
                         </select>
                     </div>
 
-                    <button type="submit" class="btn btn-cta" style="width: 100%; margin-top: 10px;"
+                    <button type="submit" class="btn btn-cta" style="width: 100%; margin-top: var(--space-sm);"
                         id="btn-start-game">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="5 3 19 12 5 21 5 3"></polygon>
                         </svg>
                         Mulakan Pengembaraan
@@ -82,10 +102,9 @@
             </div>
 
             <!-- Teacher View -->
-            <div id="teacher-form-container" style="display: none;">
+            <div id="teacher-form-container" style="display: none;" class="stagger-children">
                 <form id="teacher-form" onsubmit="handleCreateTopic(event)">
-                    <div class="form-group"
-                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 0;">
+                    <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="subject-name">Subjek</label>
                             <input type="text" id="subject-name" class="form-input" placeholder="Contoh: RBT" required>
@@ -98,8 +117,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="topic-title">Tajuk Bab/Topik</label>
-                        <input type="text" id="topic-title" class="form-input" placeholder="Contoh: Bab 3 - Algoritma"
+                        <label class="form-label" for="topic-title">Tajuk Bab / Topik</label>
+                        <input type="text" id="topic-title" class="form-input" placeholder="Contoh: Bab 3 — Algoritma"
                             required>
                     </div>
 
@@ -110,42 +129,44 @@
                             required></textarea>
                     </div>
 
-                    <div class="form-group"
-                        style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 10px; margin-bottom: 0;">
+                    <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="topic-theme">Tema Dunia Asas</label>
                             <select id="topic-theme" class="form-select">
-                                <option value="Fantasy Kingdom" selected>Medieval Fantasy Kingdom</option>
-                                <option value="Cyberpunk">Cyberpunk City</option>
-                                <option value="Space Adventure">Space Orbit / Cosmic Odyssey</option>
-                                <option value="Pirate Island">Treasure Pirate Island</option>
+                                <option value="Fantasy Kingdom" selected>🏰 Medieval Fantasy Kingdom</option>
+                                <option value="Cyberpunk">🌃 Cyberpunk City</option>
+                                <option value="Space Adventure">🚀 Space Orbit / Cosmic Odyssey</option>
+                                <option value="Pirate Island">🏴‍☠️ Treasure Pirate Island</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="topic-difficulty">Tahap</label>
                             <select id="topic-difficulty" class="form-select">
-                                <option value="easy">Easy</option>
-                                <option value="medium" selected>Medium</option>
-                                <option value="hard">Hard</option>
+                                <option value="easy">🟢 Easy</option>
+                                <option value="medium" selected>🟡 Medium</option>
+                                <option value="hard">🔴 Hard</option>
                             </select>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;"
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: var(--space-sm);"
                         id="btn-create-topic">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                         </svg>
                         Bina Dunia Pembelajaran
                     </button>
                 </form>
+
+                <!-- Dynamic generate adventure area (appended by JS) -->
+                <div id="generate-adventure-area"></div>
             </div>
         </div>
 
-        <div
-            style="font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted); text-align: center;">
-            Database Connected: 1cHsCtca...PNGRIRHA
+        <!-- Footer -->
+        <div class="landing-footer">
+            Database Connected &nbsp;|&nbsp; RPG Education AI v2.0
         </div>
     </div>
 
@@ -154,7 +175,48 @@
     <script src="js/state.js"></script>
 
     <script>
-        // Tab switcher
+        // ============================================================
+        // THEME TOGGLE
+        // ============================================================
+        (function initTheme() {
+            const html = document.documentElement;
+            const saved = localStorage.getItem('ai_rpg_theme');
+            if (saved === 'light') {
+                html.setAttribute('data-theme', 'light');
+            }
+        })();
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('btn-theme-toggle');
+            const isDark = html.getAttribute('data-theme') !== 'light';
+
+            if (isDark) {
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('ai_rpg_theme', 'light');
+                btn.innerHTML = '☀️';
+                btn.title = 'Tukar ke mod gelap';
+            } else {
+                html.removeAttribute('data-theme');
+                localStorage.setItem('ai_rpg_theme', 'dark');
+                btn.innerHTML = '🌙';
+                btn.title = 'Tukar ke mod terang';
+            }
+        }
+
+        document.getElementById('btn-theme-toggle').addEventListener('click', toggleTheme);
+
+        // Set initial icon
+        (function setThemeIcon() {
+            const btn = document.getElementById('btn-theme-toggle');
+            const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+            btn.innerHTML = isDark ? '🌙' : '☀️';
+            btn.title = isDark ? 'Tukar ke mod terang' : 'Tukar ke mod gelap';
+        })();
+
+        // ============================================================
+        // TAB SWITCHER
+        // ============================================================
         function switchTab(role) {
             const studentTab = document.getElementById('tab-student');
             const teacherTab = document.getElementById('tab-teacher');
@@ -163,18 +225,24 @@
 
             if (role === 'student') {
                 studentTab.classList.add('active');
+                studentTab.setAttribute('aria-selected', 'true');
                 teacherTab.classList.remove('active');
+                teacherTab.setAttribute('aria-selected', 'false');
                 studentForm.style.display = 'block';
                 teacherForm.style.display = 'none';
             } else {
                 studentTab.classList.remove('active');
+                studentTab.setAttribute('aria-selected', 'false');
                 teacherTab.classList.add('active');
+                teacherTab.setAttribute('aria-selected', 'true');
                 studentForm.style.display = 'none';
                 teacherForm.style.display = 'block';
             }
         }
 
-        // Load topics on page load
+        // ============================================================
+        // LOAD TOPICS FROM BACKEND
+        // ============================================================
         async function loadTopics() {
             const select = document.getElementById('game-topic');
             try {
@@ -185,7 +253,6 @@
                     data.topics.forEach(t => {
                         const option = document.createElement('option');
                         option.value = t.topicId;
-                        // Show adventure status
                         const status = t.hasAdventure ? '✅' : '⏳';
                         const details = t.hasAdventure
                             ? ` (${t.questCount} quests, ${t.questionCount} soalan)`
@@ -194,7 +261,8 @@
                         select.appendChild(option);
                     });
                 } else {
-                    select.innerHTML = '<option value="" disabled>Tiada topik tersedia. Sila buat di Panel Guru.</option>';
+                    select.innerHTML =
+                        '<option value="" disabled>Tiada topik tersedia. Sila buat di Panel Guru.</option>';
                 }
             } catch (err) {
                 console.error("Failed to load topics:", err);
@@ -202,46 +270,47 @@
             }
         }
 
-        // Resume session handling
+        // ============================================================
+        // RESUME SESSION
+        // ============================================================
         function checkActiveSession() {
             const hasSession = GameState.loadFromLocalStorage();
             if (hasSession && GameState.sessionId && GameState.playerName) {
                 const banner = document.getElementById('resume-banner');
                 const details = document.getElementById('resume-details');
 
-                details.innerHTML = `Pemain: <strong>${GameState.playerName}</strong> | Level: <strong>${GameState.level}</strong> | Sesi: <strong>${GameState.currentWorld || 'Unknown World'}</strong>`;
+                details.innerHTML =
+                    `Pemain: <strong>${GameState.playerName}</strong> | Level: <strong>${GameState.level}</strong> | Dunia: <strong>${GameState.currentWorld || 'Unknown'}</strong>`;
                 banner.style.display = 'block';
 
-                // Set student form name to default
                 document.getElementById('player-name').value = GameState.playerName;
             }
         }
 
-        // Handle Start Game
+        // ============================================================
+        // START GAME
+        // ============================================================
         async function handleStartGame(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-start-game');
             const originalHtml = btn.innerHTML;
             btn.disabled = true;
-            btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin" style="margin-right: 8px;"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg> Memuatkan Pengembaraan...`;
+            btn.innerHTML =
+                `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="animate-spin"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg> Memuatkan Pengembaraan...`;
 
             const name = document.getElementById('player-name').value.trim();
             const topicId = document.getElementById('game-topic').value;
             const difficulty = document.getElementById('game-difficulty').value;
 
             try {
-                // Initialize game on GAS
                 const initData = await ApiClient.initGame({
                     playerName: name,
                     topicId: topicId,
                     difficulty: difficulty
                 });
 
-                // Save to game state
                 GameState.clear();
                 GameState.init(initData);
-
-                // Redirect to game board
                 window.location.href = 'game.html';
             } catch (err) {
                 alert(`Gagal memulakan game: ${err.message}`);
@@ -250,13 +319,16 @@
             }
         }
 
-        // Handle Create Topic
+        // ============================================================
+        // CREATE TOPIC (TEACHER)
+        // ============================================================
         async function handleCreateTopic(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-create-topic');
             const originalHtml = btn.innerHTML;
             btn.disabled = true;
-            btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin" style="margin-right: 8px;"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg> Membina Pangkalan Data Dunia...`;
+            btn.innerHTML =
+                `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="animate-spin"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg> Membina Pangkalan Data...`;
 
             const subject = document.getElementById('subject-name').value.trim();
             const form = document.getElementById('form-level').value.trim();
@@ -277,12 +349,14 @@
 
                 alert("✅ Topik berjaya disimpan!\n\nLangkah seterusnya: Jana pengembaraan dengan AI.");
 
-                // Auto-open generate adventure dialog
-                const generateBtn = document.createElement('div');
-                generateBtn.innerHTML = `
-                    <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid var(--color-success); border-radius: var(--radius-sm); padding: 20px; margin-top: 20px; text-align: center;">
-                        <p style="color: #FFF; margin-bottom: 12px; font-weight: 600;">📖 Langkah 2: Jana Pengembaraan</p>
-                        <p style="font-size: 13px; color: var(--color-text-muted); margin-bottom: 16px;">
+                // Append generate adventure prompt
+                const area = document.getElementById('generate-adventure-area');
+                area.innerHTML = `
+                    <div class="glass-panel" style="margin-top: var(--space-lg); padding: var(--space-lg); text-align: center; border-color: var(--color-success); animation: fadeInUp 0.4s ease forwards;">
+                        <p style="color: var(--color-text-heading); margin-bottom: 12px; font-weight: 600; font-size: 0.9375rem;">
+                            📖 Langkah 2: Jana Pengembaraan
+                        </p>
+                        <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: var(--space-md);">
                             Tekan butang di bawah untuk AI menjana world, NPCs, quests, dan soalan SEKALI.
                         </p>
                         <button class="btn btn-cta" id="btn-generate-adv" style="width: 100%;" onclick="handleGenerateAdventure('${response.topicId}')">
@@ -290,7 +364,9 @@
                         </button>
                     </div>
                 `;
-                document.getElementById('teacher-form-container').appendChild(generateBtn);
+
+                // Scroll to the generate button
+                area.scrollIntoView({ behavior: 'smooth', block: 'center' });
             } catch (err) {
                 alert(`Gagal memuat naik nota: ${err.message}`);
             } finally {
@@ -299,23 +375,26 @@
             }
         }
 
-        // Handle Generate Adventure (Teacher)
+        // ============================================================
+        // GENERATE ADVENTURE (TEACHER)
+        // ============================================================
         async function handleGenerateAdventure(topicId) {
             const btn = document.getElementById('btn-generate-adv');
             if (btn) {
                 btn.disabled = true;
                 btn.innerHTML = '⏳ AI sedang menjana dunia, NPC, quest, soalan... (30-60 saat)';
+                btn.style.animation = 'pulse 1.5s ease-in-out infinite';
             }
 
             try {
                 const result = await ApiClient.generateAdventure(topicId);
                 alert(`✅ Pengembaraan berjaya dijana!\n\n${result.message}`);
 
-                // Remove the generate button
-                const generateDiv = btn ? btn.closest('div[style]') : null;
-                if (generateDiv) generateDiv.remove();
+                // Remove generate area
+                const area = document.getElementById('generate-adventure-area');
+                if (area) area.innerHTML = '';
 
-                // Reload topics
+                // Switch to student tab & reload
                 switchTab('student');
                 await loadTopics();
             } catch (err) {
@@ -323,23 +402,31 @@
                 if (btn) {
                     btn.disabled = false;
                     btn.innerHTML = '⚡ Jana Pengembaraan dengan AI';
+                    btn.style.animation = '';
                 }
             }
         }
 
-        // Initialize elements
+        // ============================================================
+        // EVENT BINDINGS
+        // ============================================================
         document.getElementById('btn-resume').addEventListener('click', () => {
             window.location.href = 'game.html';
         });
 
         document.getElementById('btn-discard').addEventListener('click', () => {
-            if (confirm("Adakah anda pasti mahu membuang sesi sebelum ini dan memulakan permainan baru? Progress anda akan dipadam.")) {
+            if (confirm(
+                "Adakah anda pasti mahu membuang sesi sebelum ini dan memulakan permainan baru? Progress anda akan dipadam."
+            )) {
                 GameState.clear();
                 document.getElementById('resume-banner').style.display = 'none';
+                document.getElementById('player-name').value = '';
             }
         });
 
-        // Start
+        // ============================================================
+        // INIT
+        // ============================================================
         window.addEventListener('DOMContentLoaded', async () => {
             checkActiveSession();
             await loadTopics();
@@ -347,6 +434,7 @@
     </script>
 
     <style>
+        /* Inline critical animations */
         .animate-spin {
             animation: spin 1s linear infinite;
         }
