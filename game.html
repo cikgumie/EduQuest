@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG Education AI - Game Board</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-layout">
+        <!-- ============================================================
+             HUD HEADER
+             ============================================================ -->
+        <header class="hud-header">
+            <!-- Left: Player Profile & Navigation -->
+            <div class="hud-left">
+                <a href="index.html" class="btn btn-secondary" style="padding: 6px 12px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    Utama
+                </a>
+                <div class="player-identity">
+                    <span class="player-name" id="hud-player-name">Wira</span>
+                    <span class="player-level" id="hud-player-level">Novice Explorer (Lv. 1)</span>
+                </div>
+            </div>
+
+            <!-- Center: Location Status -->
+            <div class="hud-center">
+                <div class="location-badge">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" y1="3" x2="9" y2="18"></line><line x1="15" y1="6" x2="15" y2="21"></line></svg>
+                    <span id="hud-location-name">Memuatkan Dunia...</span>
+                </div>
+            </div>
+
+            <!-- Right: Health & Experience Status Bars -->
+            <div class="hud-right">
+                <!-- Health Bar (HP) -->
+                <div class="bar-container">
+                    <div class="bar-label">
+                        <span style="color: var(--color-danger); display: flex; align-items: center; gap: 2px;">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+                            HP
+                        </span>
+                        <span id="hud-hp-text">100/100</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill hp" id="hud-hp-fill" style="width: 100%;"></div>
+                    </div>
+                </div>
+
+                <!-- Experience Bar (XP) -->
+                <div class="bar-container">
+                    <div class="bar-label">
+                        <span style="color: var(--color-secondary); display: flex; align-items: center; gap: 2px;">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                            XP
+                        </span>
+                        <span id="hud-xp-text">0/100</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill xp" id="hud-xp-fill" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ============================================================
+             MAIN GRID AREA
+             ============================================================ -->
+        <main class="game-main">
+            <!-- Left: Interactive Log Board -->
+            <div class="game-board">
+                <!-- Scrollable Story & Dialogue Log -->
+                <div class="story-log" id="story-log">
+                    <!-- Dynamic log segments go here -->
+                </div>
+
+                <!-- User Interactive Option Panel -->
+                <div class="interaction-area glass-panel" id="interaction-panel">
+                    <!-- Appended dialog choice buttons or question inputs dynamically -->
+                </div>
+            </div>
+
+            <!-- Right: Character Stats & Inventory Sidebar -->
+            <aside class="game-sidebar">
+                <!-- Active Quest Widget -->
+                <div class="sidebar-section">
+                    <h3>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        Quest Aktif
+                    </h3>
+                    <div class="quest-widget" id="quest-widget">
+                        <div class="quest-title-sub" id="sidebar-quest-title">Tiada Quest</div>
+                        <div class="quest-desc" id="sidebar-quest-desc">Terokai dunia untuk mendapatkan misi baru.</div>
+                    </div>
+                </div>
+
+                <!-- Inventory Slots Grid -->
+                <div class="sidebar-section">
+                    <h3>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                        Bantuan Pembelajaran
+                    </h3>
+                    <div class="inventory-grid" id="inventory-grid">
+                        <!-- Inventory slots are rendered here -->
+                    </div>
+                </div>
+
+                <!-- Character Attribute Skills Stats -->
+                <div class="sidebar-section">
+                    <h3>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        Kemahiran Wira (Stats)
+                    </h3>
+                    <div class="stats-list">
+                        <div class="stat-row">
+                            <span class="stat-label">Knowledge (Kefahaman)</span>
+                            <span class="stat-val" id="stat-knowledge">1</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Logic (Penaakulan)</span>
+                            <span class="stat-val" id="stat-logic">1</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Creativity (Idea)</span>
+                            <span class="stat-val" id="stat-creativity">1</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Communication (Penjelasan)</span>
+                            <span class="stat-val" id="stat-communication">1</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Problem Solving (Penyelesaian)</span>
+                            <span class="stat-val" id="stat-problemSolving">1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save Game button -->
+                <button class="btn btn-secondary" style="margin-top: auto; font-size: 12px; padding: 8px 12px;" onclick="handleSaveGame()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    Simpan Progress Manual
+                </button>
+            </aside>
+        </main>
+    </div>
+
+    <!-- ============================================================
+         COMBAT / BOSS BATTLE SCREEN OVERLAY
+         ============================================================ -->
+    <div class="combat-overlay" id="combat-overlay">
+        <!-- Boss HP Bar -->
+        <div class="boss-hp-container">
+            <div class="boss-name" id="boss-name">BOSS: ENEMY OF LOGIC</div>
+            <div class="boss-hp-bar-track">
+                <div class="boss-hp-bar-fill" id="boss-hp-fill" style="width: 100%;"></div>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 14px; margin-top: 4px;" id="boss-hp-text">100/100 HP</div>
+        </div>
+
+        <div class="boss-arena">
+            <!-- Left: Boss Avatar Graphics -->
+            <div class="boss-visuals glass-panel">
+                <div class="boss-avatar-placeholder">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                </div>
+                <div class="boss-dialogue-box" id="boss-dialogue">
+                    "Kamu fikir kamu boleh menewaskan saya dengan nota ringkas itu?!"
+                </div>
+            </div>
+
+            <!-- Right: Action Panel inside Combat -->
+            <div class="boss-combat-interaction glass-panel" id="combat-interaction">
+                <!-- Combat multiple-choice options or questions will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         LEVEL UP GLITCH CELEBRATION MODAL
+         ============================================================ -->
+    <div class="modal-overlay" id="levelup-modal">
+        <div class="modal-content glass-panel" style="text-align: center; border-color: var(--color-cta); max-width: 450px;">
+            <div style="font-size: 80px; margin-bottom: 10px; animation: float 2s infinite;">👑</div>
+            <h2 class="text-glow-cta" style="font-size: 32px; color: var(--color-cta); margin-bottom: 8px; font-family: var(--font-heading);">TAHNIAH!</h2>
+            <h3 style="font-family: var(--font-mono); font-size: 18px; margin-bottom: 20px;" id="levelup-title">LEVEL UP</h3>
+            <p style="color: var(--color-text-muted); font-size: 14px; margin-bottom: 24px;" id="levelup-desc">
+                Anda telah naik ke Level! Kemahiran bertambah hebat.
+            </p>
+            <button class="btn btn-cta" onclick="closeLevelUpModal()" style="width: 100%;">Teruskan Perjalanan</button>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         DEATH / GAME OVER MODAL
+         ============================================================ -->
+    <div class="modal-overlay" id="death-modal">
+        <div class="modal-content glass-panel" style="text-align: center; border-color: var(--color-danger); max-width: 450px;">
+            <div style="font-size: 80px; margin-bottom: 10px;">💀</div>
+            <h2 class="text-glow-cta" style="font-size: 32px; color: var(--color-danger); margin-bottom: 8px; font-family: var(--font-heading);">WIRA TEWAS!</h2>
+            <h3 style="font-family: var(--font-mono); font-size: 18px; margin-bottom: 20px;">HP Telah Mencecah 0</h3>
+            <p style="color: var(--color-text-muted); font-size: 14px; margin-bottom: 24px;">
+                Jangan putus asa. Anda boleh mengulangi semula cabaran atau pulang ke kampung untuk mengulangkaji nota.
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button class="btn btn-primary" onclick="handleRevive()" style="background: var(--color-danger); box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);">Ulang Misi / Revive</button>
+                <a href="index.html" class="btn btn-secondary">Pulang ke Menu Utama</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
