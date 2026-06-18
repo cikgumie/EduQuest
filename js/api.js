@@ -13,7 +13,7 @@ const ApiClient = {
      */
     async request(action, method = "POST", data = {}) {
         let url = `${GAS_API_URL}?action=${action}`;
-        
+
         const options = {
             method: method,
             mode: "cors"
@@ -115,6 +115,23 @@ const ApiClient = {
      */
     saveGame(sessionId) {
         return this.request("saveGame", "POST", { sessionId });
+    },
+
+    /**
+     * Generate full adventure content (Teacher action)
+     * AI generates world, NPCs, quests, questions ONCE.
+     * Students then play without any AI calls.
+     */
+    generateAdventure(topicId) {
+        return this.request("generateAdventure", "POST", { topicId });
+    },
+
+    /**
+     * Get adventure status for a topic
+     * Shows if adventure exists, plus NPC/quest/question counts
+     */
+    getAdventureStatus(topicId) {
+        return this.request("getAdventureStatus", "GET", { topicId });
     },
 
     /**

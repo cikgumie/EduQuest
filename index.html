@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RPG Education AI - Portal</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <div class="landing-container">
         <!-- Main Logo / Title -->
@@ -13,17 +15,26 @@
         <div class="game-subtitle">Transforming Notes into Adventures</div>
 
         <!-- Resume Game Alert banner if session exists -->
-        <div id="resume-banner" class="glass-panel" style="display: none; width: 100%; max-width: 500px; padding: 20px; margin-bottom: 20px; border-color: var(--color-success); background: rgba(16, 185, 129, 0.05); text-align: center;">
-            <p style="color: #FFF; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-success);"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <div id="resume-banner" class="glass-panel"
+            style="display: none; width: 100%; max-width: 500px; padding: 20px; margin-bottom: 20px; border-color: var(--color-success); background: rgba(16, 185, 129, 0.05); text-align: center;">
+            <p
+                style="color: #FFF; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-success);">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
                 Ada Sesi Permainan Aktif!
             </p>
             <p style="font-size: 13px; color: var(--color-text-muted); margin-bottom: 16px;" id="resume-details">
                 Pemain: <strong>-</strong> | Level: <strong>-</strong>
             </p>
             <div style="display: flex; gap: 10px; justify-content: center;">
-                <button class="btn btn-primary" id="btn-resume" style="box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); background: var(--color-success);">Teruskan Sesi</button>
-                <button class="btn btn-secondary" id="btn-discard" style="padding: 10px 15px; font-size: 12px;">Sesi Baru</button>
+                <button class="btn btn-primary" id="btn-resume"
+                    style="box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); background: var(--color-success);">Teruskan
+                    Sesi</button>
+                <button class="btn btn-secondary" id="btn-discard" style="padding: 10px 15px; font-size: 12px;">Sesi
+                    Baru</button>
             </div>
         </div>
 
@@ -39,7 +50,8 @@
                 <form id="student-form" onsubmit="handleStartGame(event)">
                     <div class="form-group">
                         <label class="form-label" for="player-name">Nama Wira Anda</label>
-                        <input type="text" id="player-name" class="form-input" placeholder="Masukkan nama wira anda..." required>
+                        <input type="text" id="player-name" class="form-input" placeholder="Masukkan nama wira anda..."
+                            required>
                     </div>
 
                     <div class="form-group">
@@ -58,8 +70,12 @@
                         </select>
                     </div>
 
-                    <button type="submit" class="btn btn-cta" style="width: 100%; margin-top: 10px;" id="btn-start-game">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                    <button type="submit" class="btn btn-cta" style="width: 100%; margin-top: 10px;"
+                        id="btn-start-game">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
                         Mulakan Pengembaraan
                     </button>
                 </form>
@@ -68,28 +84,34 @@
             <!-- Teacher View -->
             <div id="teacher-form-container" style="display: none;">
                 <form id="teacher-form" onsubmit="handleCreateTopic(event)">
-                    <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 0;">
+                    <div class="form-group"
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 0;">
                         <div class="form-group">
                             <label class="form-label" for="subject-name">Subjek</label>
                             <input type="text" id="subject-name" class="form-input" placeholder="Contoh: RBT" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="form-level">Tingkatan</label>
-                            <input type="text" id="form-level" class="form-input" placeholder="Contoh: Tingkatan 1" required>
+                            <input type="text" id="form-level" class="form-input" placeholder="Contoh: Tingkatan 1"
+                                required>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="topic-title">Tajuk Bab/Topik</label>
-                        <input type="text" id="topic-title" class="form-input" placeholder="Contoh: Bab 3 - Algoritma" required>
+                        <input type="text" id="topic-title" class="form-input" placeholder="Contoh: Bab 3 - Algoritma"
+                            required>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="topic-notes">Nota Pembelajaran (Untuk Penjanaan AI)</label>
-                        <textarea id="topic-notes" class="form-textarea" placeholder="Copy-paste nota penuh di sini. AI akan menggunakan nota ini untuk menjana jalan cerita, NPC, quest, dan soalan kuiz..." required></textarea>
+                        <textarea id="topic-notes" class="form-textarea"
+                            placeholder="Copy-paste nota penuh di sini. AI akan menggunakan nota ini untuk menjana jalan cerita, NPC, quest, dan soalan kuiz..."
+                            required></textarea>
                     </div>
 
-                    <div class="form-group" style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 10px; margin-bottom: 0;">
+                    <div class="form-group"
+                        style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 10px; margin-bottom: 0;">
                         <div class="form-group">
                             <label class="form-label" for="topic-theme">Tema Dunia Asas</label>
                             <select id="topic-theme" class="form-select">
@@ -109,15 +131,20 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;" id="btn-create-topic">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;"
+                        id="btn-create-topic">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
                         Bina Dunia Pembelajaran
                     </button>
                 </form>
             </div>
         </div>
 
-        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted); text-align: center;">
+        <div
+            style="font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted); text-align: center;">
             Database Connected: 1cHsCtca...PNGRIRHA
         </div>
     </div>
@@ -125,7 +152,7 @@
     <!-- Scripts -->
     <script src="js/api.js"></script>
     <script src="js/state.js"></script>
-    
+
     <script>
         // Tab switcher
         function switchTab(role) {
@@ -153,12 +180,17 @@
             try {
                 const data = await ApiClient.getTopics();
                 select.innerHTML = '';
-                
+
                 if (data.topics && data.topics.length > 0) {
                     data.topics.forEach(t => {
                         const option = document.createElement('option');
                         option.value = t.topicId;
-                        option.textContent = `[${t.subject}] ${t.title} (${t.theme})`;
+                        // Show adventure status
+                        const status = t.hasAdventure ? '✅' : '⏳';
+                        const details = t.hasAdventure
+                            ? ` (${t.questCount} quests, ${t.questionCount} soalan)`
+                            : ' (belum digenerate)';
+                        option.textContent = `${status} [${t.subject}] ${t.title}${details}`;
                         select.appendChild(option);
                     });
                 } else {
@@ -176,10 +208,10 @@
             if (hasSession && GameState.sessionId && GameState.playerName) {
                 const banner = document.getElementById('resume-banner');
                 const details = document.getElementById('resume-details');
-                
+
                 details.innerHTML = `Pemain: <strong>${GameState.playerName}</strong> | Level: <strong>${GameState.level}</strong> | Sesi: <strong>${GameState.currentWorld || 'Unknown World'}</strong>`;
                 banner.style.display = 'block';
-                
+
                 // Set student form name to default
                 document.getElementById('player-name').value = GameState.playerName;
             }
@@ -191,7 +223,7 @@
             const btn = document.getElementById('btn-start-game');
             const originalHtml = btn.innerHTML;
             btn.disabled = true;
-            btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin" style="margin-right: 8px;"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg> Menjana Dunia AI...`;
+            btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin" style="margin-right: 8px;"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg> Memuatkan Pengembaraan...`;
 
             const name = document.getElementById('player-name').value.trim();
             const topicId = document.getElementById('game-topic').value;
@@ -208,7 +240,7 @@
                 // Save to game state
                 GameState.clear();
                 GameState.init(initData);
-                
+
                 // Redirect to game board
                 window.location.href = 'game.html';
             } catch (err) {
@@ -243,17 +275,55 @@
                     difficulty
                 });
 
-                alert("✅ Pangkalan data dunia berjaya dicipta! Topik kini tersedia untuk dimainkan.");
-                document.getElementById('teacher-form').reset();
-                
-                // Switch back to student and reload topics
-                switchTab('student');
-                await loadTopics();
+                alert("✅ Topik berjaya disimpan!\n\nLangkah seterusnya: Jana pengembaraan dengan AI.");
+
+                // Auto-open generate adventure dialog
+                const generateBtn = document.createElement('div');
+                generateBtn.innerHTML = `
+                    <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid var(--color-success); border-radius: var(--radius-sm); padding: 20px; margin-top: 20px; text-align: center;">
+                        <p style="color: #FFF; margin-bottom: 12px; font-weight: 600;">📖 Langkah 2: Jana Pengembaraan</p>
+                        <p style="font-size: 13px; color: var(--color-text-muted); margin-bottom: 16px;">
+                            Tekan butang di bawah untuk AI menjana world, NPCs, quests, dan soalan SEKALI.
+                        </p>
+                        <button class="btn btn-cta" id="btn-generate-adv" style="width: 100%;" onclick="handleGenerateAdventure('${response.topicId}')">
+                            ⚡ Jana Pengembaraan dengan AI
+                        </button>
+                    </div>
+                `;
+                document.getElementById('teacher-form-container').appendChild(generateBtn);
             } catch (err) {
                 alert(`Gagal memuat naik nota: ${err.message}`);
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = originalHtml;
+            }
+        }
+
+        // Handle Generate Adventure (Teacher)
+        async function handleGenerateAdventure(topicId) {
+            const btn = document.getElementById('btn-generate-adv');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '⏳ AI sedang menjana dunia, NPC, quest, soalan... (30-60 saat)';
+            }
+
+            try {
+                const result = await ApiClient.generateAdventure(topicId);
+                alert(`✅ Pengembaraan berjaya dijana!\n\n${result.message}`);
+
+                // Remove the generate button
+                const generateDiv = btn ? btn.closest('div[style]') : null;
+                if (generateDiv) generateDiv.remove();
+
+                // Reload topics
+                switchTab('student');
+                await loadTopics();
+            } catch (err) {
+                alert(`❌ Gagal: ${err.message}`);
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '⚡ Jana Pengembaraan dengan AI';
+                }
             }
         }
 
@@ -275,15 +345,22 @@
             await loadTopics();
         });
     </script>
-    
+
     <style>
         .animate-spin {
             animation: spin 1s linear infinite;
         }
+
         @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </body>
+
 </html>
